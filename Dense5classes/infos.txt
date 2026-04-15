@@ -1,6 +1,0 @@
-best2_finetuned_acc0.9587 notre base, sans la base de lannée dernière
-best_finetuned_acc0.9668 avec notre base et celle de l'année dernière 
-best_densenet121_acc0.7600 sur FER2013
-
-best20_densenet121_acc0.7304 sur fer et affectnet
-best2_finetuned_acc0.9337 sur base complete sur best20

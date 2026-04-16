@@ -26,7 +26,7 @@ CLASSES = ['angry', 'fear', 'happy', 'sad', 'surprise']
 #MODEL_PATH = "emotion_detection_models/fine_tuned_model.pth"
 #CLASSES = ['angry', 'fear', 'happy', 'sad']
 
-# ================= LOAD MODEL =================
+# Chargement du modèle
 print("[INFO] Chargement modèle...")
 
 emotion_model = models.densenet121(weights=None)
@@ -40,7 +40,7 @@ emotion_model.eval()
 
 print("[OK] Modèle chargé")
 
-# ================= TRANSFORM =================
+# Transformations
 transform = transforms.Compose([
     transforms.Resize((224, 224)),
     transforms.ToTensor(),
@@ -63,18 +63,6 @@ prompts_files = {
 }
 
 current_prompt = "prompt_1"
-
-
-"""
-def get_frame():
-    try:
-        msg = socket.recv(flags=zmq.NOBLOCK)
-        img = np.frombuffer(msg, dtype=np.uint8)
-        frame = cv2.imdecode(img, cv2.IMREAD_COLOR)
-        return frame
-    except:
-        return None
-"""
 
         
 def get_frame():
@@ -105,7 +93,7 @@ def get_frame():
     return frame
 
 
-# ================= EXPRESSION CONTINUE =================
+# Expressions du robot furhat
 def set_furhat_expression(furhat, emotion):
     expr_map = {
         "angry": {"EXPR_ANGER": 1.0, "BROW_DOWN_LEFT": 1.0, "BROW_DOWN_RIGHT": 1.0, "SMILE_OPEN": 0.0, "PHONE_BIGAAH":0.0},
@@ -162,7 +150,7 @@ def reset_expression(furhat):
         ]
     })
 
-# ================= LED =================
+# Configurations des leds pour chaque émotion
 def set_led(furhat, emotion):
     if emotion == "angry":
         furhat.set_led(red=255, green=0, blue=0)
@@ -175,7 +163,7 @@ def set_led(furhat, emotion):
     elif emotion == "surprise":
         furhat.set_led(red=0, green=255, blue=0)
 
-# ================= OLLAMA =================
+# Réponse avec Ollama
 def ask_ollama(emotion):
     prompt = f"L'utilisateur semble {emotion}. Réponds en français uniquement en 2 phrases maximum avec un ton empathique."
 
@@ -200,14 +188,13 @@ def detect_emotion_once_zmq():
         cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
     )
 
-    timeout = time.time() + 5  # max 5 sec
+    timeout = time.time() + 5  
 
     frame = None
     faces = []
 
-    # ===============================
-    # 1. attendre un frame valide
-    # ===============================
+    
+    # Attendre un frame valide
     while time.time() < timeout:
 
         frame = get_frame()
@@ -220,19 +207,15 @@ def detect_emotion_once_zmq():
         if len(faces) > 0:
             break
 
-    # ===============================
-    # 2. si rien détecté
-    # ===============================
+    # Si rien détecté
     if frame is None or len(faces) == 0:
         print("[EMOTION] aucun visage détecté")
         return "no_face"
 
-    # ===============================
-    # 3. draw + prediction
-    # ===============================
+ 
+    # Boxes visages + prediction
     (x, y, w, h) = faces[0]
 
-    # draw rectangle sur frame
     debug_frame = frame.copy()
     cv2.rectangle(debug_frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
 
@@ -248,7 +231,6 @@ def detect_emotion_once_zmq():
     emotion = CLASSES[pred.item()]
     
 
-
     # afficher texte sur image
     cv2.putText(
         debug_frame,
@@ -260,9 +242,7 @@ def detect_emotion_once_zmq():
         2
     )
 
-    # ===============================
-    # 4. DISPLAY FRAME
-    # ===============================
+    # Affichage frame
     cv2.imshow("Emotion Detection Debug", debug_frame)
     cv2.waitKey(1)
 
@@ -367,7 +347,6 @@ def main():
         print('[Vous] ', user_input)
         
         if "emotion" in user_input.lower() or "émotion" in user_input.lower():
-            #reset_expression(furhat)
             time.sleep(1)
             emotion = detect_emotion_once_zmq()
             print("[RESULT EMOTION]", emotion)

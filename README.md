@@ -79,6 +79,7 @@ furhat_emotion_detection/
 ├── fine_tuning.py                                 # Programme pour lancer le fine-tunning d'un modèle à partir de la base de données dataset_5classes 
 ├── furhat_ollama.py                               # Programme pour parler au robot et lui demander la détection d'émotion en disant une phrase contenant le mot "émotion"   
 ├── photo.py                                       # Permet de prendre des photos avec la caméra du Furhat
+├── embedding.py                                   # Permet de comprarer les données de la base de données
 ├── testfinetuned.py                               # Tester une le fine-tuning à partir d'une photo contenue dans photo_test
 ├── requirements.txt                               # Packages utiles au lancement des différents programmes       
 └── README.md                                      # Cette documentation

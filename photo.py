@@ -4,7 +4,7 @@ import numpy as np
 import json
 import os
 
-# CONFIG
+# Configurations
 ZMQ_URL = "tcp://192.168.10.14:3000"  
 SAVE_DIR = "dataset"
 EMOTION_LABEL = input("Emotion (happy, sad, etc) : ")
@@ -12,12 +12,12 @@ EMOTION_LABEL = input("Emotion (happy, sad, etc) : ")
 save_path = os.path.join(SAVE_DIR, EMOTION_LABEL)
 os.makedirs(save_path, exist_ok=True)
 
-# face detector
+# Détection de visage
 face_cascade = cv2.CascadeClassifier(
     cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
 )
 
-# ZMQ
+# ZMQ pour la caméra
 context = zmq.Context()
 socket = context.socket(zmq.SUB)
 socket.connect(ZMQ_URL)
@@ -45,7 +45,7 @@ while True:
         minSize=(60, 60)
     )
 
-    # draw boxes
+    # Boxes visage
     for (x, y, w, h) in faces:
         cv2.rectangle(img, (x+3, y+3), (x + w+3, y + h+3), (0, 255, 0), 2)
 
@@ -53,7 +53,6 @@ while True:
 
     key = cv2.waitKey(1) & 0xFF
 
-    # SAVE FACE ONLY
     if key == ord('s'):
         if len(faces) == 0:
             print("Aucun visage détecté")

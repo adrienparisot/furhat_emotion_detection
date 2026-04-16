@@ -3,13 +3,12 @@ import torch.nn as nn
 from torchvision import models, transforms
 from PIL import Image
 
-# ================= CONFIG =================
 MODEL_PATH = "Dense5classes/best2_finetuned_acc0.9337.pth"
 IMAGE_PATH = "photo_test/triste.png"  
 
 CLASSES = ['angry', 'fear', 'happy', 'sad', 'surprise']
 
-# ================= LOAD MODEL =================
+# Chargement modèle
 print("[INFO] Chargement modèle...")
 
 model = models.densenet121(weights=None)
@@ -20,7 +19,7 @@ model.eval()
 
 print("[OK] Modèle chargé")
 
-# ================= TRANSFORM =================
+# Augmentation de données
 transform = transforms.Compose([
     transforms.Resize((224, 224)),
     transforms.ToTensor(),
@@ -28,13 +27,13 @@ transform = transforms.Compose([
                          [0.229, 0.224, 0.225])
 ])
 
-# ================= LOAD IMAGE =================
+# Charger image
 print("[INFO] Chargement image...")
 
 image = Image.open(IMAGE_PATH).convert("RGB")
 input_tensor = transform(image).unsqueeze(0)
 
-# ================= INFERENCE =================
+# Inférences
 print("[INFO] Prédiction...")
 
 with torch.no_grad():
@@ -44,7 +43,7 @@ with torch.no_grad():
 
 emotion = CLASSES[predicted.item()]
 
-# ================= RESULT =================
+# Résultats
 print("\n===== RESULT =====")
 print(f"Emotion prédite : {emotion}")
 print(f"Confiance       : {confidence.item():.4f}")

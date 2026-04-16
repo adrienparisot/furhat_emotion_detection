@@ -57,7 +57,7 @@ python furhat_ollama.py
 ## Structure du projet
 
 ```
-Furhat/
+furhat_emotion_detection/
 ├── 📁 Dense5classes/          # Les modèles
 │   ├── best2_densenet121_acc0.7304.pth            # Modèle entraîné sur la base de données affectnet_fer
     ├── best2_finetuned_acc0.9337.pth              # Modèle entraîné sur la base de données dataset_5classes à partir du modèle best2_densenet121_acc0.7304.pth

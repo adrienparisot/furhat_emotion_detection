@@ -9,7 +9,7 @@ import zmq
 import time
 import random
 
-# ================= CONFIG =================
+
 #MODEL_PATH = "Dense5classes/best_finetuned_acc0.9668.pth"
 MODEL_PATH = "Dense5classes/best2_finetuned_acc0.9337.pth"
 CLASSES = ['angry', 'fear', 'happy', 'sad', 'surprise']
@@ -22,7 +22,7 @@ last_emotion_time = 0
 is_speaking = False
 last_response = None
 
-# ================= REPONSES =================
+# Réponses pré définies
 RESPONSES = {
     "angry": [
         "Je ressens de la colère. C'est une émotion forte.",
@@ -77,7 +77,7 @@ def get_predefined_response(emotion):
     last_response = response
     return response
 
-# ================= MODEL =================
+# Modèle
 print("[INFO] Chargement modèle...")
 model = models.densenet121(weights=None)
 model.classifier = nn.Linear(model.classifier.in_features, len(CLASSES))
@@ -92,12 +92,12 @@ transform = transforms.Compose([
                          [0.229, 0.224, 0.225])
 ])
 
-# ================= FURHAT =================
+# Furhat
 furhat = FurhatRemoteAPI("192.168.10.14")
 furhat.set_voice(name='Isabelle-Neural')
 furhat.attend(user="CLOSEST")
 
-# ================= ZMQ =================
+# ZMQ caméra
 context = zmq.Context()
 socket = context.socket(zmq.SUB)
 socket.connect("tcp://192.168.10.14:3000")
@@ -105,7 +105,7 @@ socket.setsockopt_string(zmq.SUBSCRIBE, "")
 
 print("[INFO] Caméra connectée")
 
-# ================= BUFFER =================
+# clean buffer
 def clear_zmq_buffer():
     try:
         while True:
@@ -113,7 +113,7 @@ def clear_zmq_buffer():
     except:
         pass
 
-# ================= EXPRESSIONS =================
+# Expressions
 def set_furhat_expression(emotion):
     expr_map = {
         "angry": {"EXPR_ANGER": 1.0, "BROW_DOWN_LEFT": 1.0, "BROW_DOWN_RIGHT": 1.0},
@@ -167,7 +167,7 @@ def reset_expression():
         ]
     })
 
-# ================= LED =================
+# Configurations led
 def set_led(emotion):
     if emotion == "angry":
         furhat.set_led(red=255, green=0, blue=0)
@@ -182,7 +182,7 @@ def set_led(emotion):
     elif emotion == "neutre":
         furhat.set_led(red=0, green=0, blue=0)
 
-# ================= LOOP =================
+
 print("[INFO] Démarrage...")
 
 while running:

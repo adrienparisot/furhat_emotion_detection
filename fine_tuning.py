@@ -7,9 +7,7 @@ from torch.optim.lr_scheduler import ReduceLROnPlateau
 import matplotlib.pyplot as plt
 import os
 
-# ======================
-# DATA
-# ======================
+# Data
 data_dir = "dataset_complet"
 
 transform = transforms.Compose([
@@ -35,9 +33,8 @@ num_classes = len(class_names)
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-# ======================
-# MODEL
-# ======================
+
+# Modèle
 model = models.densenet121(pretrained=False)
 
 # charger modèle pré-entraîné FER
@@ -47,9 +44,8 @@ model.load_state_dict(torch.load("Dense5classes/best2_densenet121_acc0.7304.pth"
 # adapter au nouveau dataset
 model.classifier = nn.Linear(model.classifier.in_features, num_classes)
 
-# ======================
-# FREEZE
-# ======================
+
+# Gel couches
 for param in model.features.parameters():
     param.requires_grad = False
 
@@ -58,9 +54,8 @@ for param in model.classifier.parameters():
 
 model = model.to(device)
 
-# ======================
-# TRAIN FUNCTIONS
-# ======================
+
+# Training
 def train_one_epoch(model, dataloader, criterion, optimizer):
     model.train()
     total_loss, correct, total = 0, 0, 0
@@ -99,9 +94,7 @@ def evaluate(model, dataloader, criterion):
     return total_loss / total, correct / total
 
 
-# ======================
-# TRAIN LOOP
-# ======================
+# Train 
 def train_model(model, train_loader, val_loader, num_epochs=15, save_dir="Dense5classes"):
     os.makedirs(save_dir, exist_ok=True)
 
@@ -141,9 +134,7 @@ def train_model(model, train_loader, val_loader, num_epochs=15, save_dir="Dense5
 
     print("Meilleur modèle sauvegardé :", save_path)
 
-    # ======================
-    # PLOTS
-    # ======================
+    # Plot
     plt.figure(figsize=(12,5))
 
     # Loss
@@ -166,7 +157,5 @@ def train_model(model, train_loader, val_loader, num_epochs=15, save_dir="Dense5
     return model
 
 
-# ======================
-# RUN
-# ======================
+# Run
 model = train_model(model, train_loader, val_loader, num_epochs=15)
